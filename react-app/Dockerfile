@@ -4,6 +4,11 @@ WORKDIR /usr/src/app
 
 COPY ./package.json /package.json
 RUN yarn install --no-lockfile
+RUN yarn add react-router-dom
+RUN npm install three
+RUN npm install three-obj-loader
+
+
 
 COPY . .
 
