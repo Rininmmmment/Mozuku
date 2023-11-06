@@ -1,9 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
+import ThreeDObject from './ThreeDObject'; // ファイルのパスを指定
 
 function WebcamCapture() {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const [result, setResult] = useState<string>('');
+  const [result, setResult] = useState<number>(2); // 初期値を2に変更
 
   useEffect(() => {
     const startWebcam = async () => {
@@ -44,9 +45,9 @@ function WebcamCapture() {
         if (response.ok) {
           const data = await response.json();
           if (data.result === 'Yes') {
-            setResult('会いに来てくれたんだね！嬉しいにゃ〜');
+            setResult(1); // 顔が認識されたら1を設定
           } else {
-            setResult('遊んでくれなくて悲しいにゃ...');
+            setResult(2); // 顔が認識されなければ2を設定
           }
         } else {
           console.error('Error sending image for analysis');
@@ -70,7 +71,8 @@ function WebcamCapture() {
       <button onClick={captureVideoFrame}>Capture and Analyze</button>
       <video style={{ display: 'none' }} ref={videoRef} autoPlay />
       <canvas ref={canvasRef} style={{ display: 'none' }} />
-      <p>もずく: {result}</p>
+      <p>もずく: {result === 1 ? '顔が認識されました' : result === 2 ? '顔が認識されませんでした' : '解析中...'}</p>
+      <ThreeDObject color={result} />
     </div>
   );
 }

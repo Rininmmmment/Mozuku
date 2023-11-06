@@ -8,8 +8,6 @@ RUN yarn add react-router-dom
 RUN npm install three
 RUN npm install three-obj-loader
 
-
-
 COPY . .
 
 CMD ["yarn", "start"]

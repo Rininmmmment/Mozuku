@@ -6,7 +6,7 @@ function App() {
   return (
     <div>
       <WebcamCapture /> {/* WebcamCaptureコンポーネントを表示 */}
-      <ThreeDObject /> {/* ThreeDObjectコンポーネントを表示 */}
+      {/* <ThreeDObject color={1} /> ThreeDObjectコンポーネントを表示 */}
     </div>
   );
 }

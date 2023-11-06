@@ -1,8 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 
-
-function ThreeDObject() {
+function ThreeDObject({ color }: { color: number }) { // colorの型アノテーションを追加
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   useEffect(() => {
@@ -21,7 +20,7 @@ function ThreeDObject() {
 
     // 立方体の作成
     const geometry = new THREE.BoxGeometry();
-    const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+    const material = new THREE.MeshBasicMaterial({ color: getColorFromValue(color) });
     const cube = new THREE.Mesh(geometry, material);
     scene.add(cube);
 
@@ -38,10 +37,22 @@ function ThreeDObject() {
     };
 
     animate();
-  }, []);
+  }, [color]);
+
+  const getColorFromValue = (value: number) => { // valueの型アノテーションを追加
+    switch (value) {
+      case 0:
+        return 0xff00ff; // ピンク
+      case 1:
+        return 0x00ff00; // 緑
+      case 2:
+        return 0x0000ff; // 青
+      default:
+        return 0x00ff00; // デフォルトは緑
+    }
+  };
 
   return <canvas ref={canvasRef} style={{ display: 'block', width: '100%' }} />;
 }
 
 export default ThreeDObject;
-
