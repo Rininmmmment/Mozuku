@@ -16,8 +16,8 @@ function ThreeDModel() {
 
     // カメラの設定
     const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-    camera.position.z = 10;
-    camera.position.y = -1;
+    camera.position.z = 12;
+    camera.position.y = -4;
     camera.lookAt(0, 0, 0);
 
     const renderer = new THREE.WebGLRenderer({ canvas });
@@ -30,25 +30,40 @@ function ThreeDModel() {
     scene.add(directionalLight);
 
     // モデルの読み込み
-    const objLoader = new GLTFLoader();
-    objLoader.load('shachi.glb', function (obj) {      
-      modelRef.current = obj.scene;
-      scene.add(obj.scene);
-      animate();
-    },
-    undefined,
-    function (error) {
-      console.error("モデルの読み込み中にエラーが発生しました:", error);
+    const gltfLoader = new GLTFLoader();
+    const clock = new THREE.Clock();
+    gltfLoader.load(
+      'shachi-animation.glb',
+      function (gltf) {     
+        // アニメーションを読み込む
+        let mixer = new THREE.AnimationMixer(gltf.scene); 
+        gltf.animations.forEach((clip) => {
+          mixer.clipAction(clip).play();
+        });
+
+        scene.add(gltf.scene);
+
+        // アニメーションを更新する関数を定義する
+        function update() {
+          if (mixer) {
+              mixer.update(clock.getDelta());
+          }
+        }
+
+        // アニメーションを再生するイベントを設定する
+        renderer.setAnimationLoop(() => {
+          update();
+          renderer.render(scene, camera);
+        });        
+      },
+      undefined,
+      function (error) {
+        console.error("モデルの読み込み中にエラーが発生しました:", error);
     });
 
     // アニメーションの設定
     function animate() {
       requestAnimationFrame(animate);
-
-      if (modelRef.current) {
-        modelRef.current.rotation.y += 0.001;
-      }
-
       renderer.render(scene, camera);
     }
 
