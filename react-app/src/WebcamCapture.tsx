@@ -72,7 +72,7 @@ function WebcamCapture() {
       <video style={{ display: 'none' }} ref={videoRef} autoPlay />
       <canvas ref={canvasRef} style={{ display: 'none' }} />
       <p>もずく: {result === 1 ? '顔が認識されました' : result === 2 ? '顔が認識されませんでした' : '解析中...'}</p>
-      <ThreeDObject color={result} />
+      {/* <ThreeDObject color={result} /> */}
     </div>
   );
 }

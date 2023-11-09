@@ -18,9 +18,15 @@ function ThreeDObject({ color }: { color: number }) { // colorの型アノテー
     // レンダラの作成
     const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
 
+    // 平行光源を作成
+    const directionalLight = new THREE.DirectionalLight(0xffffff);
+    directionalLight.intensity = 10;
+    directionalLight.position.set(5, 5, 5);
+    scene.add(directionalLight);
+
     // 立方体の作成
     const geometry = new THREE.BoxGeometry();
-    const material = new THREE.MeshBasicMaterial({ color: getColorFromValue(color) });
+    const material = new THREE.MeshStandardMaterial({ color: getColorFromValue(color) });
     const cube = new THREE.Mesh(geometry, material);
     scene.add(cube);
 
