@@ -7,7 +7,7 @@ function App() {
     
     <div>
       <WebcamCapture /> {/* WebcamCaptureコンポーネントを表示 */}
-      <ThreeDModel />
+      {/* <ThreeDModel animation = { 0 } /> */}
     </div>
   );
 }

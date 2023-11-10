@@ -1,10 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react';
-import ThreeDObject from './ThreeDObject'; // ファイルのパスを指定
+import ThreeDModel from './ShachiObject';
 
 function WebcamCapture() {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const [result, setResult] = useState<number>(2); // 初期値を2に変更
+  const [result, setResult] = useState<number>(1);
+  const [animationType, setAnimationType] = useState<number>(0);
 
   useEffect(() => {
     const startWebcam = async () => {
@@ -30,10 +31,8 @@ function WebcamCapture() {
       if (ctx) {
         ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-        // Canvasから画像データを取得
         const imageDataURL = canvas.toDataURL('image/jpeg');
 
-        // 画像データを送信
         const response = await fetch('http://localhost:8000/face-detection', {
           method: 'POST',
           body: JSON.stringify({ image: imageDataURL }),
@@ -45,9 +44,9 @@ function WebcamCapture() {
         if (response.ok) {
           const data = await response.json();
           if (data.result === 'Yes') {
-            setResult(1); // 顔が認識されたら1を設定
+            setResult(1);
           } else {
-            setResult(2); // 顔が認識されなければ2を設定
+            setResult(0);
           }
         } else {
           console.error('Error sending image for analysis');
@@ -57,22 +56,25 @@ function WebcamCapture() {
   };
 
   useEffect(() => {
-    // 10秒ごとにcaptureVideoFrameを呼び出すタイマーを設定
-    const timer = setInterval(captureVideoFrame, 10000);
+    const timer = setInterval(captureVideoFrame, 5000);
 
-    // コンポーネントがアンマウントされたときにタイマーをクリア
     return () => {
       clearInterval(timer);
     };
   }, []);
 
+  // アニメーションのタイプが変更されたときにThreeDModelを再描画
+  useEffect(() => {
+    setAnimationType((prev) => (prev === 0 ? 1 : 0)); // アニメーションをトグルする
+  }, [result]);
+
   return (
     <div>
-      <button onClick={captureVideoFrame}>Capture and Analyze</button>
+      <button onClick={captureVideoFrame}>Camera ON</button>
       <video style={{ display: 'none' }} ref={videoRef} autoPlay />
       <canvas ref={canvasRef} style={{ display: 'none' }} />
-      <p>もずく: {result === 1 ? '顔が認識されました' : result === 2 ? '顔が認識されませんでした' : '解析中...'}</p>
-      {/* <ThreeDObject color={result} /> */}
+      <p>もずく: {result === 1 ? '顔が認識されました' : result === 0 ? '顔が認識されませんでした' : '解析中...'}</p>
+      <ThreeDModel animationType={animationType} />
     </div>
   );
 }
