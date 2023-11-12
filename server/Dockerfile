@@ -15,7 +15,6 @@ RUN apt install -y python3 python3-pip
 RUN pip install --upgrade pip
 
 WORKDIR /usr/src/app
-COPY ./ /usr/src/app
 
 RUN pip install opencv-python
 
@@ -23,4 +22,4 @@ RUN pip install tensorflow
 
 RUN pip install fastapi uvicorn
 
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
