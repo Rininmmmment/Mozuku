@@ -15,13 +15,6 @@ function ThreeDModel({ animationType }: { animationType: number }) {
     const scene = new THREE.Scene();
     scene.background = new THREE.Color(0xffffff);
 
-    // 背景画像を読み込む
-    var texture = new THREE.TextureLoader().load("sea.png");
-
-    // 背景画像を描画する
-    var quad = new THREE.Mesh(new THREE.PlaneGeometry(100, 60), new THREE.MeshBasicMaterial({ map: texture }));
-    scene.add(quad);
-
     // カメラの設定
     const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
     camera.position.z = 15;
