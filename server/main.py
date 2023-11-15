@@ -36,17 +36,10 @@ async def detect_face(image_data: ImageData):
 async def check_nod(text: str = Form(default=None)):
     if text is None:
         return {"response": "no-text"}
-    elif "頷いて" in text:
-        return {"response": "nod"}
-    elif "手を振って" in text:
-        return {"response": "wave"}
-    elif "ポーズ" in text:
-        return {"response": "pose"}
     elif "もずく" in text:
         return {"response": "mozuku"}
     else:
         return {"response": "nothing"}
-
 
 app.add_middleware(
     CORSMiddleware,

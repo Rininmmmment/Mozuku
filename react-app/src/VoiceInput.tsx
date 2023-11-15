@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMicrophone, faSquare } from '@fortawesome/free-solid-svg-icons';
+import { Howl } from 'howler';
 import './styles/voice-input.css';
 
 declare global {
@@ -14,6 +15,7 @@ const SpeechRecognitionComponent = () => {
   const [transcript, setTranscript] = useState('');
   const [listening, setListening] = useState(false);
   const [apiResponse, setApiResponse] = useState('');
+  const [playSound, setPlaySound] = useState(false);
 
   useEffect(() => {
     const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
@@ -24,8 +26,6 @@ const SpeechRecognitionComponent = () => {
       const last = event.results.length - 1;
       const recognizedText = event.results[last][0].transcript;
       setTranscript(recognizedText);
-
-      // Send transcript to API
       sendToApi(recognizedText);
     };
 
@@ -38,21 +38,17 @@ const SpeechRecognitionComponent = () => {
     return () => {
       recognition.stop();
     };
-  }, [listening]);
+  }, [listening, playSound]);
 
   const toggleListening = () => {
     setListening((prev) => !prev);
   };
 
   const sendToApi = (text: string) => {
-    // Replace 'YOUR_API_ENDPOINT' with the actual API endpoint
     const apiEndpoint = 'http://localhost:8000/check-voice';
-
-    // Create a FormData object
     const formData = new FormData();
     formData.append('text', text);
 
-    // Basic fetch example with FormData
     fetch(apiEndpoint, {
       method: 'POST',
       body: formData,
@@ -61,6 +57,10 @@ const SpeechRecognitionComponent = () => {
       .then(data => {
         console.log('API Response:', data);
         setApiResponse(`API Response: ${JSON.stringify(data)}`);
+
+        if (data.response === 'mozuku') {
+          setTimeout(() => setPlaySound(true), 1000);
+        }
       })
       .catch(error => {
         console.error('Error:', error);
@@ -68,14 +68,28 @@ const SpeechRecognitionComponent = () => {
       });
   };
 
+  useEffect(() => {
+    if (playSound) {
+      playAudio();
+      setPlaySound(false);
+    }
+  }, [playSound]);
+
+  const playAudio = () => {
+    const sound = new Howl({
+      src: ['./short.mp3'],
+    });
+
+    sound.play();
+  };
+
   return (
     <div className="speech-recognition-container">
       <button className="listening-toggle-btn" onClick={toggleListening}>
-        {listening ? <FontAwesomeIcon icon={faSquare} style={{color: "#f46a48",}} /> : <FontAwesomeIcon icon={faMicrophone} style={{color: "#144599",}} />}
+        {listening ? <FontAwesomeIcon icon={faSquare} style={{ color: "#f46a48" }} /> : <FontAwesomeIcon icon={faMicrophone} style={{ color: "#144599" }} />}
       </button>
       <div className="transcript-container">
         <p className="transcript-text">{transcript}</p>
-        {/* <p className="api-response-text">{apiResponse}</p> */}
       </div>
     </div>
   );
