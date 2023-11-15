@@ -10,7 +10,7 @@ function WebcamCapture() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [result, setResult] = useState<number>(1);
   const [animationType, setAnimationType] = useState<number>(0);
-  const [isCameraOn, setIsCameraOn] = useState<boolean>(false);
+  const [isCameraOn, setIsCameraOn] = useState<boolean>(true);
 
   useEffect(() => {
     const startWebcam = async () => {
@@ -21,7 +21,6 @@ function WebcamCapture() {
             videoRef.current.srcObject = stream;
           }
         } else {
-          // カメラがオフの場合、srcObjectをnullに設定して切断
           if (videoRef.current) {
             const currentStream = videoRef.current.srcObject as MediaStream;
             if (currentStream) {
@@ -73,7 +72,7 @@ function WebcamCapture() {
   };
 
   useEffect(() => {
-    const timer = setInterval(captureVideoFrame, 15000);
+    const timer = setInterval(captureVideoFrame, 5000);
 
     return () => {
       clearInterval(timer);
@@ -92,7 +91,7 @@ function WebcamCapture() {
     <div className="webcam-container">
       <button className="camera-toggle-btn" onClick={toggleCamera}>
         {isCameraOn ? (
-          <FontAwesomeIcon icon={faVideoSlash} style={{ color: "#35566A" }} />
+          <FontAwesomeIcon icon={faVideoSlash} style={{ color: "#f46a48" }} />
         ) : (
           <FontAwesomeIcon icon={faVideo} style={{ color: "#35566A" }} />
         )}

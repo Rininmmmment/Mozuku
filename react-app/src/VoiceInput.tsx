@@ -70,14 +70,18 @@ const SpeechRecognitionComponent = () => {
 
   useEffect(() => {
     if (playSound) {
-      playAudio();
+      playRandomAudio();
       setPlaySound(false);
     }
   }, [playSound]);
 
-  const playAudio = () => {
+  const playRandomAudio = () => {
+    const randomIndex = Math.random() < 0.5 ? 0 : 1;
+    const soundFiles = ['./short.mp3', './default.mp3'];
+    const selectedSound = soundFiles[randomIndex];
+
     const sound = new Howl({
-      src: ['./short.mp3'],
+      src: [selectedSound],
     });
 
     sound.play();
