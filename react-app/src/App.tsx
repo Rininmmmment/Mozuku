@@ -1,11 +1,13 @@
 import React from 'react';
-import WebcamCapture from './WebcamCapture'; // WebcamCaptureコンポーネントが定義されたファイルへのインポート
+import WebcamCapture from './WebcamCapture';
 import SpeechRecognitionComponent from './VoiceInput'
+import Navbar from './Navbar';
+
 function App() {
   return (
-    
     <div>
-      <WebcamCapture /> {/* WebcamCaptureコンポーネントを表示 */}
+      <Navbar />
+      <WebcamCapture />
       <SpeechRecognitionComponent />
     </div>
   );

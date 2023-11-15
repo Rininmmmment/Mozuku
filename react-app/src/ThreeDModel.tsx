@@ -1,8 +1,12 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, HTMLProps } from 'react';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 
-function ThreeDModel({ animationType }: { animationType: number }) {
+interface ThreeDModelProps extends HTMLProps<HTMLCanvasElement> {
+  animationType: number;
+}
+
+function ThreeDModel({ animationType, ...canvasProps }: ThreeDModelProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const modelRef = useRef<THREE.Object3D | null>(null);
   const [mixer, setMixer] = useState<THREE.AnimationMixer | null>(null);
@@ -18,7 +22,7 @@ function ThreeDModel({ animationType }: { animationType: number }) {
     // カメラの設定
     const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
     camera.position.z = 15;
-    camera.position.y = 1;
+    camera.position.y = 0;
     camera.lookAt(0, 0, 0);
 
     const renderer = new THREE.WebGLRenderer({ canvas });
@@ -86,7 +90,8 @@ function ThreeDModel({ animationType }: { animationType: number }) {
 
   }, [animationType]);
 
-  return <canvas ref={canvasRef} style={{ display: 'block' }} />;
+  return <canvas ref={canvasRef} style={{ width: '100%', height: '100%', display: 'block', visibility: canvasProps.style?.visibility }} {...canvasProps} />;
+
 }
 
 export default ThreeDModel;

@@ -1,4 +1,7 @@
 import React, { useEffect, useState } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faMicrophone, faSquare } from '@fortawesome/free-solid-svg-icons';
+import './styles/voice-input.css';
 
 declare global {
   interface Window {
@@ -66,10 +69,14 @@ const SpeechRecognitionComponent = () => {
   };
 
   return (
-    <div>
-      <button onClick={toggleListening}>{listening ? 'Stop' : 'Start'} Listening</button>
-      <p>音声認識結果: {transcript}</p>
-      <p>{apiResponse}</p>
+    <div className="speech-recognition-container">
+      <button className="listening-toggle-btn" onClick={toggleListening}>
+        {listening ? <FontAwesomeIcon icon={faSquare} style={{color: "#f46a48",}} /> : <FontAwesomeIcon icon={faMicrophone} style={{color: "#144599",}} />}
+      </button>
+      <div className="transcript-container">
+        <p className="transcript-text">{transcript}</p>
+        {/* <p className="api-response-text">{apiResponse}</p> */}
+      </div>
     </div>
   );
 };
