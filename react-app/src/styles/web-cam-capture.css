@@ -1,0 +1,68 @@
+.camera-toggle-btn {
+    width: 80px;
+    height: 80px;
+    background-color: white;
+    border: none;
+    border-radius: 50%;
+    box-shadow: 0 2px 4px rgba(3, 4, 10, 0.5);
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    font-size: 28px;
+    opacity: 0.7;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+
+    position: fixed;
+    bottom: 250px;
+    right: 100px;
+
+    transition: background-color 0.3s ease, transform 0.2s ease;
+  }
+  
+.camera-toggle-btn:hover {
+    opacity: 0.8;
+    transform: scale(1.05);
+}
+
+
+/* カメラオフ */
+@keyframes blink {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+  
+.camera-off-container {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(255, 255, 255, 0.7);
+  padding: 30px;
+  border-radius: 10px;
+  text-align: center;
+  font-size: 20px;
+  color: #444;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  max-width: 900px;
+}
+
+.camera-off-text {
+  margin-bottom: 15px;
+  animation: blink 3s infinite; /* 点滅アニメーション */
+}
+
+.camera-off-text:first-child {
+  font-weight: bold;
+}

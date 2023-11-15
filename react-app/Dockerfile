@@ -8,6 +8,8 @@ RUN yarn add react-router-dom
 RUN npm install three
 RUN npm install three-obj-loader
 RUN npm install three-addons
+RUN npm install --save @fortawesome/free-solid-svg-icons
+
 
 COPY . .
 

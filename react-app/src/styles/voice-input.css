@@ -1,0 +1,50 @@
+.listening-toggle-btn {
+    width: 80px;
+    height: 80px;
+    background-color: white;
+    border: none;
+    border-radius: 50%;
+    box-shadow: 0 2px 4px rgba(3, 4, 10, 0.5);
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    font-size: 28px;
+    opacity: 0.7;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+
+    position: fixed;
+    bottom: 150px;
+    right: 100px;
+
+    transition: background-color 0.3s ease, transform 0.2s ease;
+  }
+  
+.listening-toggle-btn:hover {
+    opacity: 0.8;
+    transform: scale(1.05);
+}
+  
+.transcript-container {
+  width: 1250px;
+  height: 80px;
+  padding: 5px 24px;
+  background-color: #ffffff;
+  border-radius: 5px;
+  font-size: 16px;
+  opacity: 0.3;
+
+  position: fixed;
+  bottom: 20px;
+  right: 30px;
+
+  overflow: scroll;
+
+  &::-webkit-scrollbar {
+    width: 0;
+  }
+}

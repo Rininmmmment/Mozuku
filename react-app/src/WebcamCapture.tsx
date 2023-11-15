@@ -1,32 +1,49 @@
 import React, { useEffect, useRef, useState } from 'react';
-import ThreeDModel from './ShachiObject';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faVideo, faVideoSlash } from '@fortawesome/free-solid-svg-icons';
+
+import ThreeDModel from './ThreeDModel';
+import './styles/web-cam-capture.css';
 
 function WebcamCapture() {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [result, setResult] = useState<number>(1);
   const [animationType, setAnimationType] = useState<number>(0);
+  const [isCameraOn, setIsCameraOn] = useState<boolean>(false);
 
   useEffect(() => {
     const startWebcam = async () => {
       try {
-        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-        if (videoRef.current) {
-          videoRef.current.srcObject = stream;
+        if (isCameraOn) {
+          const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+          if (videoRef.current) {
+            videoRef.current.srcObject = stream;
+          }
+        } else {
+          // カメラがオフの場合、srcObjectをnullに設定して切断
+          if (videoRef.current) {
+            const currentStream = videoRef.current.srcObject as MediaStream;
+            if (currentStream) {
+              const tracks = currentStream.getTracks();
+              tracks.forEach((track) => track.stop());
+            }
+            videoRef.current.srcObject = null;
+          }
         }
       } catch (error) {
-        console.error('Error accessing webcam:', error);
+        console.error('Webカメラにアクセスできませんでした:', error);
       }
     };
 
     startWebcam();
-  }, []);
+  }, [isCameraOn]);
 
   const captureVideoFrame = async () => {
     const canvas = canvasRef.current;
     const video = videoRef.current;
 
-    if (canvas && video) {
+    if (canvas && video && isCameraOn) {
       const ctx = canvas.getContext('2d');
       if (ctx) {
         ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
@@ -56,25 +73,43 @@ function WebcamCapture() {
   };
 
   useEffect(() => {
-    const timer = setInterval(captureVideoFrame, 5000);
+    const timer = setInterval(captureVideoFrame, 15000);
 
     return () => {
       clearInterval(timer);
     };
-  }, []);
+  }, [isCameraOn]);
 
-  // アニメーションのタイプが変更されたときにThreeDModelを再描画
+  const toggleCamera = () => {
+    setIsCameraOn((prev) => !prev);
+  };
+
   useEffect(() => {
-    setAnimationType((prev) => (prev === 0 ? 1 : 0)); // アニメーションをトグルする
+    setAnimationType((prev) => (prev === 0 ? 1 : 0));
   }, [result]);
 
   return (
-    <div>
-      <button onClick={captureVideoFrame}>Camera ON</button>
-      <video style={{ display: 'none' }} ref={videoRef} autoPlay />
-      <canvas ref={canvasRef} style={{ display: 'none' }} />
-      <p>もずく: {result === 1 ? '顔が認識されました' : result === 0 ? '顔が認識されませんでした' : '解析中...'}</p>
-      <ThreeDModel animationType={animationType} />
+    <div className="webcam-container">
+      <button className="camera-toggle-btn" onClick={toggleCamera}>
+        {isCameraOn ? (
+          <FontAwesomeIcon icon={faVideoSlash} style={{ color: "#35566A" }} />
+        ) : (
+          <FontAwesomeIcon icon={faVideo} style={{ color: "#35566A" }} />
+        )}
+      </button>
+      <video className="webcam-video" ref={videoRef} autoPlay style={{ display: 'none' }} />
+      <canvas className="webcam-canvas" ref={canvasRef} style={{ display: 'none' }} />
+      <ThreeDModel
+          className="3d-model"
+          animationType={animationType}
+          style={{ visibility: 'visible' }}
+        />
+      {isCameraOn ? null : (
+        <div className="camera-off-container">
+          <p className="camera-off-text">Your camera is off.</p>
+          <p className="camera-off-text">Mozuku responds correctly only when the camera is on.</p>
+        </div>
+      )}
     </div>
   );
 }
