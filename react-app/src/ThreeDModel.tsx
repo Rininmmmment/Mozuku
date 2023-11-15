@@ -10,6 +10,8 @@ function ThreeDModel({ animationType, ...canvasProps }: ThreeDModelProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const modelRef = useRef<THREE.Object3D | null>(null);
   const [mixer, setMixer] = useState<THREE.AnimationMixer | null>(null);
+  const radius = 10;
+  let angle = 0;
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -57,6 +59,7 @@ function ThreeDModel({ animationType, ...canvasProps }: ThreeDModelProps) {
 
           const selectedAnimation = animations[animationType];
           const anime = newMixer.clipAction(selectedAnimation);
+
           anime.play();
 
           scene.add(gltf.scene);
@@ -65,6 +68,7 @@ function ThreeDModel({ animationType, ...canvasProps }: ThreeDModelProps) {
             if (newMixer) {
               newMixer.update(clock.getDelta());
             }
+            
           }
 
           renderer.setAnimationLoop(() => {
@@ -81,7 +85,6 @@ function ThreeDModel({ animationType, ...canvasProps }: ThreeDModelProps) {
 
     loadModel();
 
-    // ウィンドウのリサイズ時にCanvasのサイズを調整
     window.addEventListener('resize', () => {
       camera.aspect = window.innerWidth / window.innerHeight;
       camera.updateProjectionMatrix();
